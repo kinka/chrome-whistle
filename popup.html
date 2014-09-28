@@ -15,6 +15,22 @@
         width: 75px;
         height: 75px;
       }
+      
+      legend { width: 500px; margin: 0; padding: 0;}
+      .online, .local {
+        margin: 0 5px;
+        height: 24px;
+        width: 200px;
+        padding: 0 2px;
+        line-height: 24px;
+      }
+      .switcher {
+        width: 16px;
+        height: 16px;
+        line-height: 16px;
+        float: right;
+        margin-top: 7px;
+      }
     </style>
 
     <!--
@@ -26,7 +42,11 @@
     <script src="popup.js"></script>
   </head>
   <body>
-  <label for="switcher">劫持开关</label><input type="checkbox" id="switcher">
+  <legend>
+    <input class="online" placeholder="www.logger:im:8888/static/">
+    <input class="local" placeholder="http://127.0.0.1:8888">
+    <input type="checkbox" class="switcher">
+  </legend>
   </body>
 </html>
 
