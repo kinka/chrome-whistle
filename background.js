@@ -5,19 +5,28 @@ var cb = function(details) {
 	var dstUrl = "http://127.0.0.1/static/";
 	var matched = "";
 	for (var online in maps) {
-		matched = url.match(new RegExp(online+"(.*)", "i"));
+		var pattern = new RegExp(online, "i");
+		matched = url.match(pattern);
 // 		console.log(url, matched, maps[online], online);
 		if (!matched) continue;
 		
-		console.log(maps[online]+'/' + matched[1])
-		return {redirectUrl: maps[online]+'/' + matched[1]};
+		console.log(url.replace(pattern, maps[online]))
+		return {redirectUrl: url.replace(pattern, maps[online])};
 	};
 }
-var filter = {urls: ["<all_urls>"]};
+var filter = {urls:[]}; // {urls: ["<all_urls>"]};
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	console.log(request);
+	maps = {};
 	maps[request.online] = request.local;
-	if (request.doBlock)	
+	console.log(maps)
+	var matched = request.online.match(new RegExp("(?:http://|^)(.*?)/","i"));
+	if (matched && matched[1])
+		filter.urls = ["*://" + matched[1]+"/*"];
+	else
+		return sendResponse("failed " + matched);
+	console.log(filter.urls)
+	if (request.doBlock)
 		chrome.webRequest.onBeforeRequest.addListener(cb, filter, ["blocking"]);
 	else
 		chrome.webRequest.onBeforeRequest.removeListener(cb);

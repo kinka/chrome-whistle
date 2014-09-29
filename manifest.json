@@ -17,6 +17,7 @@
 		"tabs",
 		"cookies",
 		"webRequest",
-		"webRequestBlocking"
+		"webRequestBlocking",
+		"management"
   ]
 }

@@ -16,13 +16,16 @@
         height: 75px;
       }
       
-      legend { width: 500px; margin: 0; padding: 0;}
+      legend { width: 600px; margin: 0; padding: 0;}
       .online, .local {
         margin: 0 5px;
         height: 24px;
-        width: 200px;
+        width: 320px;
         padding: 0 2px;
         line-height: 24px;
+      }
+      .local {
+        width: 200px;
       }
       .switcher {
         width: 16px;
@@ -30,6 +33,9 @@
         line-height: 16px;
         float: right;
         margin-top: 7px;
+      }
+      #launch_app {
+        margin: 0px 5px 18px 5px;
       }
     </style>
 
@@ -42,6 +48,7 @@
     <script src="popup.js"></script>
   </head>
   <body>
+  <button id="launch_app">Launch Whistle-Proxy</button>
   <legend>
     <input class="online" placeholder="www.logger:im:8888/static/">
     <input class="local" placeholder="http://127.0.0.1:8888">

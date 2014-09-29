@@ -2,13 +2,15 @@ document.addEventListener('DOMContentLoaded', function () {
 	var $ = function(selector) {return document.querySelector(selector);},
 		$$ = function(selector) {return document.querySelectorAll(selector);};
 	
+	$('#launch_app').onclick = function() {
+		chrome.management.launchApp("oaepcbaobpinkjikdjkignjdpdgpapff");
+	}
+	
 	var switcher = $('.switcher'),
 		online = $('.online'),
 		local = $('.local');
 	switcher.checked = localStorage['doBlock'] ? true:false;
 	switcher.addEventListener('change', function() {
-		console.log(this.checked, localStorage['doBlock'])
-
 		sendConfig({doBlock: switcher.checked, online: online.value, local: local.value});
 	});
 	
@@ -30,7 +32,7 @@ document.addEventListener('DOMContentLoaded', function () {
 				localStorage['doBlock'] = config.doBlock;
 				localStorage['online'] = config.online;
 				localStorage['local'] = config.local;
-				console.log(response);
+				console.log("response", response);
 				chrome.tabs.reload();
 		});
 	}
