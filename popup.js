@@ -24,8 +24,20 @@ document.addEventListener('DOMContentLoaded', function () {
 	
 	if (!localStorage['rules'])
 		localStorage['rules'] = JSON.stringify({});
-	var rulesConfig = JSON.parse(localStorage['rules']) || {}; 
-	
+	var rulesConfig = readConfig();
+	function readConfig() {
+		try {
+			return JSON.parse(localStorage['rules']) || {}; 
+		} catch (e) {
+			localStorage.removeItem("rules");
+			console.log(e);
+		} finally {
+			return {};
+		}
+	}
+	function saveConfig(cfg) {
+		localStorage['rules'] = JSON.stringify(cfg);
+	}
 // 	sendConfig({doBlock: switcher.checked, online: online.value, local: local.value});
 	function sendConfig(config) {
 		if (!config.id) {
@@ -37,7 +49,7 @@ document.addEventListener('DOMContentLoaded', function () {
 		rule['online'] = config.online;
 		rule['local'] = config.local;
 		rulesConfig[config.id] = rule;
-		localStorage['rules'] = JSON.stringify(rulesConfig);
+		saveConfig(rulesConfig);
 		
 		chrome.extension.sendRequest(config,
 			function(response) {
@@ -62,17 +74,22 @@ document.addEventListener('DOMContentLoaded', function () {
 		var switcher = $('.switcher', rule),
 			online = $('.online', rule),
 			local = $('.local', rule);
-		switcher.checked = rulesConfig[rule.id]['doBlock'] ? true:false;
+		var ruleCfg = rulesConfig[rule.id] || {};
+		switcher.checked = ruleCfg['doBlock'] ? true:false;
 		switcher.onchange = onChange.bind(switcher);
 		
 		online.oninput = onChange.bind(online);
 		local.oninput = onChange.bind(local);
-		online.value = rulesConfig[rule.id]['online'] || "";
-		local.value = rulesConfig[rule.id]['local'] || "";
+		online.value = ruleCfg['online'] || "";
+		local.value = ruleCfg['local'] || "";
 		function onChange(e) {
 			if (e.target == local || e.target == online) {
 				if (switcher.checked)
 					switcher.checked = false;
+				if (local.value == "" && online.value == "") { // clear
+					delete rulesConfig[rule.id];
+					saveConfig(rulesConfig);
+				}
 				return;
 			}
 			// for switcher

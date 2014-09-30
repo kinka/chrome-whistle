@@ -20,9 +20,11 @@ var cb = function(details) {
 }
 var filter = {urls: []}; // {urls: ["<all_urls>"]};
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    console.log(request);
+    request.online = request.online.replace("http://", "");
+	request.local = request.local.replace("http://", "");
+//     console.log(request);
     maps[request.id] = {online: request.online, local: request.local};
-    console.log(maps)
+//     console.log(maps)
 	
 	// update filter
 	filter.urls = [];
@@ -32,7 +34,7 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 			filter.urls.push("*://" + matched[1] + "/*");
 	}
 
-    console.log('filter', filter.urls)
+//     console.log('filter', filter.urls)
     if (request.doBlock)
         chrome.webRequest.onBeforeRequest.addListener(cb, filter, ["blocking"]);
     else
