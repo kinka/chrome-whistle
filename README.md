@@ -2,6 +2,7 @@ Whistle
 =======
 
 Whistle is a chrome extension redirecting online static resources to local files. Using RegExp patterns, mapping directory or files to local workspace. We can edit sources in the Sources panel and save them directly to mapping workspace, no need to worry about missing when pages refreshed. However, we also need a proxy server transferring local files. So, I have another project [Whistle-Proxy](https://github.com/Kinka/whistle-proxy "Whistle-Proxy"), which is a chrome packaged app, acting as a http proxy webserver.
+You can download it [here](/assets/whistle.crx).
 
 ![screenshot](/assets/whistle-screenshot.png)
 
