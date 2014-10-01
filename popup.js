@@ -31,7 +31,6 @@ document.addEventListener('DOMContentLoaded', function () {
 		} catch (e) {
 			localStorage.removeItem("rules");
 			console.log(e);
-		} finally {
 			return {};
 		}
 	}
@@ -52,8 +51,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		saveConfig(rulesConfig);
 		
 		chrome.extension.sendRequest(config,
-			function(response) {
-				console.log("response", response);
+			function(data) {
+				console.log("response", data);
 				chrome.tabs.reload();
 		});
 	}
@@ -80,8 +79,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		online.oninput = onChange.bind(online);
 		local.oninput = onChange.bind(local);
-		online.value = ruleCfg['online'] || "";
-		local.value = ruleCfg['local'] || "";
+		online.value = ruleCfg['online'] || online.value;
+		local.value = ruleCfg['local'] || local.value;
 		function onChange(e) {
 			if (e.target == local || e.target == online) {
 				if (switcher.checked)

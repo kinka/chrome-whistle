@@ -4,41 +4,45 @@ var cb = function(details) {
     var url = details.url;
     var dstUrl = "";
     var matched = "";
+	var protoExp = new RegExp('(http://|https://)','i');
+	
     for (var id in maps) {
-		var online = maps[id].online,
+		var online = maps[id].online.replace(protoExp, ''),
 			local = maps[id].local;
         var pattern = new RegExp(online, "i");
         matched = url.match(pattern);
-//         		console.log(url, matched, local, online);
         if (!matched)
             continue;
 
-        // 		console.log(url.replace(pattern, local))
-		dstUrl = url.replace(pattern, local).replace('https://', 'http://');
+		var protocol = local.match(protoExp);
+		if (protocol)
+			protocol = protocol[1];
+		else
+			protocol = "http://";
+
+		local = local.replace(protoExp, '');
+		url = url.replace(protoExp, '');
+		dstUrl = protocol + url.replace(pattern, local);
+		console.log(pattern, local, url, dstUrl)
         return {redirectUrl: dstUrl};
     }
 }
 var filter = {urls: []}; // {urls: ["<all_urls>"]};
 chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
-    request.online = request.online.replace("http://", "");
-	request.local = request.local.replace("http://", "");
-//     console.log(request);
     maps[request.id] = {online: request.online, local: request.local};
-//     console.log(maps)
 	
 	// update filter
 	filter.urls = [];
 	for (var id in maps) {
-		var matched = maps[id].online.match(new RegExp("(?:http://|^)(.*?)/", "i"));
+		var matched = maps[id].online.match(new RegExp("(?:http://|https://|^)(.*?)/", "i"));
 		if (matched && matched[1])
 			filter.urls.push("*://" + matched[1] + "/*");
 	}
 
-//     console.log('filter', filter.urls)
     if (request.doBlock)
         chrome.webRequest.onBeforeRequest.addListener(cb, filter, ["blocking"]);
     else
         chrome.webRequest.onBeforeRequest.removeListener(cb);
 	
-    sendResponse('response from background.js');
+    sendResponse({filter: filter});
 });
