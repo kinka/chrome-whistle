@@ -2,6 +2,9 @@ document.addEventListener('DOMContentLoaded', function () {
 	var $ = function(selector, parent) {return (parent || document).querySelector(selector);},
 		$$ = function(selector, parent) {return (parent || document).querySelectorAll(selector);};
 	
+	$('#proxy_link').onclick = function() {
+		window.open(this.href);
+	}
 	$('#launch_app').onclick = function() {
 		chrome.management.getAll(function(data) {
 			var id = "";
@@ -79,8 +82,8 @@ document.addEventListener('DOMContentLoaded', function () {
 		
 		online.oninput = onChange.bind(online);
 		local.oninput = onChange.bind(local);
-		online.value = ruleCfg['online'] || online.value;
-		local.value = ruleCfg['local'] || local.value;
+		online.value = ruleCfg['online'] || "";
+		local.value = ruleCfg['local'] || "";
 		function onChange(e) {
 			if (e.target == local || e.target == online) {
 				if (switcher.checked)

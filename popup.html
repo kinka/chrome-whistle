@@ -37,6 +37,12 @@
       #launch_app {
         margin: 0px 5px 18px 5px;
       }
+      .proxy-link {
+        text-decoration: none;
+        font-size: 12px;
+        color: rgb(0, 167, 255);
+        font-family: monospace;
+      }
     </style>
 
     <!--
@@ -49,6 +55,7 @@
   </head>
   <body>
   <button id="launch_app">Launch Whistle-Proxy</button>
+  <a class="proxy-link" id="proxy_link" href="https://github.com/Kinka/whistle-proxy">What Is Whistle-Proxy?</a>
   <form id="rules_form">
     <legend id="rule0">
       <input class="online" placeholder="www.logger.im/static/(.*)" value="2think.sinaapp.com/static/(.*)">
