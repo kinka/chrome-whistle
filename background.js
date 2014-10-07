@@ -35,8 +35,12 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 	filter.urls = [];
 	for (var id in maps) {
 		var matched = maps[id].online.match(new RegExp("(?:http://|https://|^)(.*?)/", "i"));
-		if (matched && matched[1])
-			filter.urls.push("*://" + matched[1] + "/*");
+		if (matched && matched[1]) {
+			var host = matched[1];
+			if (host.indexOf(':') != -1)
+				host = host.substr(0, host.indexOf(':'));
+			filter.urls.push("*://" + host + "/*");
+		}
 	}
 
     if (request.doBlock)
