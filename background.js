@@ -43,10 +43,21 @@ chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
 		}
 	}
 
-    if (request.doBlock)
+    if (request.doBlock) {
         chrome.webRequest.onBeforeRequest.addListener(cb, filter, ["blocking"]);
-    else
+		chrome.webRequest.onHeadersReceived.addListener(onResponse, 
+			{urls: ["*://www.2think.com/*"]}, ["blocking"]);
+    } else {
         chrome.webRequest.onBeforeRequest.removeListener(cb);
+		chrome.webRequest.onHeadersReceived.removeListener(onResponse);
+    }
 	
     sendResponse({filter: filter});
 });
+function onResponse(details) {
+	console.log(details)
+	var accessControl = {name: 'Access-Control-Allow-Origin', value: '*'};
+	details.responseHeaders = details.responseHeaders || [];
+	details.responseHeaders.push(accessControl);
+	return {responseHeaders: details.responseHeaders};
+}
